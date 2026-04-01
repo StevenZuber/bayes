@@ -129,6 +129,7 @@ export default function LearnBayesPage() {
             <button
               key={i}
               onClick={() => setStep(i)}
+              aria-label={`Go to step ${i + 1}`}
               className={`w-2 h-2 rounded-full transition-colors ${
                 i === step
                   ? "bg-indigo-500"
@@ -403,6 +404,7 @@ function StepReveal({
 }) {
   const colors = useThemeColors();
   const totalPositive = result.truePositives + result.falsePositives;
+  const displayPosterior = totalPositive > 0 ? result.truePositives / totalPositive : 0;
   return (
     <div>
       <h2 className="text-3xl font-bold text-foreground mb-3">
@@ -443,7 +445,7 @@ function StepReveal({
         </p>
         <p className="text-4xl font-bold font-mono" style={{ color: colors.accentPurple }}>
           {result.truePositives} / {totalPositive} ={" "}
-          {formatPercent(result.posterior)}
+          {formatPercent(displayPosterior)}
         </p>
       </div>
     </div>

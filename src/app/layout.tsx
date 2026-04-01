@@ -18,6 +18,9 @@ export const metadata: Metadata = {
   title: "Seeing Bayes — A Visual Guide to Bayes' Theorem",
   description:
     "Build intuition for Bayes' Theorem through interactive visualizations. See how prior beliefs, evidence, and posterior probabilities connect.",
+  icons: {
+    apple: "/apple-touch-icon.png",
+  },
 };
 
 export default function RootLayout({
@@ -30,6 +33,13 @@ export default function RootLayout({
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `try{const t=localStorage.getItem('theme');if(t)document.documentElement.setAttribute('data-theme',t)}catch(e){}`,
+          }}
+        />
+      </head>
       <body className="min-h-full flex flex-col bg-background text-foreground">
         <ThemeProvider>
           <Header />

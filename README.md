@@ -43,7 +43,7 @@ Deployed on [Railway](https://railway.app). The app runs as a standard Next.js s
 
 ## Project Structure
 
-```
+```text
 src/
   app/
     page.tsx                    # Landing page

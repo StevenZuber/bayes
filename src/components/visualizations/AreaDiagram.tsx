@@ -166,24 +166,28 @@ export default function AreaDiagram({
         )}
       </div>
 
-      {phase === "full" && (
-        <div className="mt-3 text-center">
-          <span className="text-sm text-text-tertiary">
-            P(A|B) ={" "}
-          </span>
-          <span className="text-sm font-mono">
-            <span style={{ color: colors.accentRed }}>{result.truePositives} TP</span>
-            {" / ("}
-            <span style={{ color: colors.accentRed }}>{result.truePositives} TP</span>
-            {" + "}
-            <span style={{ color: colors.accentOrange }}>{result.falsePositives} FP</span>
-            {") = "}
-          </span>
-          <span className="font-bold text-lg text-foreground">
-            {formatPercent(result.posterior)}
-          </span>
-        </div>
-      )}
+      {phase === "full" && (() => {
+        const totalPos = result.truePositives + result.falsePositives;
+        const displayPosterior = totalPos > 0 ? result.truePositives / totalPos : 0;
+        return (
+          <div className="mt-3 text-center">
+            <span className="text-sm text-text-tertiary">
+              P(A|B) ={" "}
+            </span>
+            <span className="text-sm font-mono">
+              <span style={{ color: colors.accentRed }}>{result.truePositives} TP</span>
+              {" / ("}
+              <span style={{ color: colors.accentRed }}>{result.truePositives} TP</span>
+              {" + "}
+              <span style={{ color: colors.accentOrange }}>{result.falsePositives} FP</span>
+              {") = "}
+            </span>
+            <span className="font-bold text-lg text-foreground">
+              {formatPercent(displayPosterior)}
+            </span>
+          </div>
+        );
+      })()}
     </div>
   );
 }
