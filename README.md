@@ -1,36 +1,66 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Intuiting Bayesian Probability
+
+A visual, interactive teaching tool for building intuition about Bayes' Theorem. Instead of memorizing a formula, you see how prior beliefs, evidence, and posterior probabilities connect through animated visualizations.
+
+## Features
+
+- **Guided lesson** (`/learn/bayes`) — A 9-step walkthrough that starts with a surprising question, builds intuition through natural frequencies and visual representations, then reveals the formula after you already understand it.
+- **Interactive sandbox** (`/explore/bayes`) — All three visualizations with full slider controls and scenario presets (medical test, spam filter, courtroom evidence, fire alarm).
+- **Three visualization types:**
+  - **Icon array** — 1,000 animated dots representing a population, color-coded by condition and test result
+  - **Area diagram** — Proportional rectangle subdivision showing how the formula maps to geometry
+  - **Formula display** — Live-updating symbolic and numeric Bayes' formula with natural frequency breakdown
+- **Light/dark theme** toggle with localStorage persistence
+
+## Tech Stack
+
+Next.js, React, TypeScript, Tailwind CSS, Framer Motion, D3 (math utilities)
 
 ## Getting Started
 
-First, run the development server:
-
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Tests
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+npm test
+```
 
-## Learn More
+## Building
 
-To learn more about Next.js, take a look at the following resources:
+```bash
+npm run build
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Deployment
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Deployed on [Railway](https://railway.app). The app runs as a standard Next.js server (`npm start` on port 3000). No additional environment variables or services required.
 
-## Deploy on Vercel
+## Project Structure
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```
+src/
+  app/
+    page.tsx                    # Landing page
+    learn/bayes/page.tsx        # Guided 9-step lesson
+    explore/bayes/page.tsx      # Interactive sandbox
+  components/
+    visualizations/             # IconArray, AreaDiagram, FormulaDisplay
+    controls/                   # ProbabilitySlider, ScenarioSelector
+    layout/                     # Header
+    ThemeProvider.tsx            # Light/dark theme context
+    ThemeToggle.tsx              # Theme toggle button
+  lib/
+    bayes.ts                    # Core probability calculations
+    scenarios.ts                # Preset scenario data
+    theme-colors.ts             # Theme-aware color palette
+  types/
+    index.ts                    # Shared TypeScript types
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Extensible by design — new topics go under `/learn/[topic]` and `/explore/[topic]`.

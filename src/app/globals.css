@@ -1,26 +1,133 @@
 @import "tailwindcss";
 
+/* ===== Dark theme (default) ===== */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #1C1C1E;
+  --foreground: #F2F2F7;
+  --surface: #2C2C2E;
+  --surface-elevated: #3A3A3C;
+  --separator: #38383A;
+  --text-secondary: #AEAEB2;
+  --text-tertiary: #7C7C80;
+
+  /* Visualization palette */
+  --color-tp: #f87171;
+  --color-fp: #fb923c;
+  --color-fn: #60a5fa;
+  --color-tn: #4B4B4F;
+  --color-prior-block: #991b1b;
+  --color-no-condition-block: #3A3A3C;
+
+  /* Accent text — tuned per background */
+  --color-accent-red: #f87171;
+  --color-accent-orange: #fb923c;
+  --color-accent-blue: #60a5fa;
+  --color-accent-purple: #c084fc;
+  --color-accent-indigo: #818cf8;
+  --color-accent-gray: #9ca3af;
+
+  /* Interactive */
+  --color-btn-primary: #4f46e5;
+  --color-btn-primary-hover: #6366f1;
+  --color-btn-secondary: #7c3aed;
+  --color-btn-secondary-hover: #8b5cf6;
+
+  /* Area diagram text on colored blocks */
+  --color-tp-text: #fecaca;
+  --color-fp-text: #fed7aa;
+  --color-fn-text: #bfdbfe;
+  --color-tn-text: #e5e7eb;
+  --color-prior-text: #fecaca;
+  --color-prior-value: #fee2e2;
+  --color-no-condition-text: #d1d5db;
+  --color-no-condition-value: #e5e7eb;
+}
+
+/* ===== Light theme ===== */
+[data-theme="light"] {
+  --background: #FFFFFF;
+  --foreground: #1C1C1E;
+  --surface: #F2F2F7;
+  --surface-elevated: #E5E5EA;
+  --separator: #D1D1D6;
+  --text-secondary: #636366;
+  --text-tertiary: #8E8E93;
+
+  --color-tp: #dc2626;
+  --color-fp: #ea580c;
+  --color-fn: #2563eb;
+  --color-tn: #d1d5db;
+  --color-prior-block: #fecaca;
+  --color-no-condition-block: #e5e7eb;
+
+  --color-accent-red: #dc2626;
+  --color-accent-orange: #ea580c;
+  --color-accent-blue: #2563eb;
+  --color-accent-purple: #7c3aed;
+  --color-accent-indigo: #4f46e5;
+  --color-accent-gray: #6b7280;
+
+  --color-btn-primary: #4f46e5;
+  --color-btn-primary-hover: #4338ca;
+  --color-btn-secondary: #7c3aed;
+  --color-btn-secondary-hover: #6d28d9;
+
+  --color-tp-text: #991b1b;
+  --color-fp-text: #9a3412;
+  --color-fn-text: #1e40af;
+  --color-tn-text: #374151;
+  --color-prior-text: #991b1b;
+  --color-prior-value: #7f1d1d;
+  --color-no-condition-text: #4b5563;
+  --color-no-condition-value: #374151;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --color-surface: var(--surface);
+  --color-surface-elevated: var(--surface-elevated);
+  --color-separator: var(--separator);
+  --color-text-secondary: var(--text-secondary);
+  --color-text-tertiary: var(--text-tertiary);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans), Arial, Helvetica, sans-serif;
+}
+
+/* Range input styling */
+input[type="range"] {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 6px;
+  border-radius: 3px;
+  background: var(--surface-elevated);
+  outline: none;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: currentColor;
+  cursor: pointer;
+  border: 2px solid var(--surface);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
+}
+
+input[type="range"]::-moz-range-thumb {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: currentColor;
+  cursor: pointer;
+  border: 2px solid var(--surface);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
 }
