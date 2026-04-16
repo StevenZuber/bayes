@@ -9,21 +9,21 @@ export default function Header() {
           href="/"
           className="text-lg font-semibold text-foreground hover:text-indigo-400 transition-colors"
         >
-          Seeing Bayes
+          Seeing the Math
         </Link>
         <div className="flex items-center gap-5">
-          <div className="flex gap-6 text-sm font-medium">
+          <div className="hidden sm:flex gap-5 text-sm font-medium">
             <Link
               href="/learn/bayes"
               className="text-text-secondary hover:text-indigo-400 transition-colors"
             >
-              Learn
+              Bayes
             </Link>
             <Link
-              href="/explore/bayes"
+              href="/learn/game-theory"
               className="text-text-secondary hover:text-indigo-400 transition-colors"
             >
-              Explore
+              Game Theory
             </Link>
           </div>
           <ThemeToggle />

@@ -1,6 +1,8 @@
 import { render } from "@testing-library/react";
 import LearnBayesPage from "@/app/learn/bayes/page";
 import ExploreBayesPage from "@/app/explore/bayes/page";
+import LearnGameTheoryPage from "@/app/learn/game-theory/page";
+import ExploreGameTheoryPage from "@/app/explore/game-theory/page";
 
 /**
  * Best-effort canary for tap-target sizing. This is a class-signature check,
@@ -59,6 +61,8 @@ describe("touch target sizes", () => {
   it.each([
     ["learn/bayes", <LearnBayesPage key="learn" />],
     ["explore/bayes", <ExploreBayesPage key="explore" />],
+    ["learn/game-theory", <LearnGameTheoryPage key="learn-gt" />],
+    ["explore/game-theory", <ExploreGameTheoryPage key="explore-gt" />],
   ])("every interactive control on %s has an adequate tap target", (_name, page) => {
     const { container } = render(page);
     const targets = collectInteractiveTargets(container);
