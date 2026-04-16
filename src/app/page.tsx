@@ -25,8 +25,8 @@ export default function Home() {
         />
         <Topic
           eyebrow="Game Theory"
-          title="Prisoner's Dilemma"
-          hook="Two suspects, two rooms, one choice each. Acting rationally, both end up worse than if they'd cooperated. The simplest setup in game theory — and the most revealing."
+          title="Strategic reasoning"
+          hook="When does rational play produce collectively irrational outcomes? A short series on the Prisoner's Dilemma, Nash equilibrium, and Pareto optimality — with an editable payoff matrix to play with."
           learnHref="/learn/game-theory"
           exploreHref="/explore/game-theory"
           learnEyebrow="Lesson series"
