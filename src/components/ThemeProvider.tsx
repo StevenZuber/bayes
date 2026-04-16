@@ -1,14 +1,43 @@
 "use client";
 
-import { createContext, useContext, useEffect, useState } from "react";
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useSyncExternalStore,
+} from "react";
 
 type Theme = "dark" | "light";
+
+const STORAGE_KEY = "theme";
+const DEFAULT_THEME: Theme = "dark";
+
+// Simple external store so useSyncExternalStore can read localStorage directly,
+// avoiding an effect that calls setState (which the react-hooks lint rule flags).
+const listeners = new Set<() => void>();
+function subscribe(cb: () => void) {
+  listeners.add(cb);
+  return () => listeners.delete(cb);
+}
+function emit() {
+  listeners.forEach((cb) => cb());
+}
+function readTheme(): Theme {
+  if (typeof window === "undefined") return DEFAULT_THEME;
+  const stored = window.localStorage.getItem(STORAGE_KEY);
+  return stored === "light" || stored === "dark" ? stored : DEFAULT_THEME;
+}
+function writeTheme(next: Theme) {
+  window.localStorage.setItem(STORAGE_KEY, next);
+  emit();
+}
 
 const ThemeContext = createContext<{
   theme: Theme;
   toggle: () => void;
 }>({
-  theme: "dark",
+  theme: DEFAULT_THEME,
   toggle: () => {},
 });
 
@@ -21,29 +50,19 @@ export default function ThemeProvider({
 }: {
   children: React.ReactNode;
 }) {
-  const [theme, setTheme] = useState<Theme>("dark");
-  const [mounted, setMounted] = useState(false);
+  const theme = useSyncExternalStore(
+    subscribe,
+    readTheme,
+    () => DEFAULT_THEME,
+  );
 
   useEffect(() => {
-    const stored = localStorage.getItem("theme") as Theme | null;
-    if (stored === "light" || stored === "dark") {
-      setTheme(stored);
-      document.documentElement.setAttribute("data-theme", stored);
-    }
-    setMounted(true);
+    document.documentElement.setAttribute("data-theme", theme);
+  }, [theme]);
+
+  const toggle = useCallback(() => {
+    writeTheme(readTheme() === "dark" ? "light" : "dark");
   }, []);
-
-  const toggle = () => {
-    const next = theme === "dark" ? "light" : "dark";
-    setTheme(next);
-    document.documentElement.setAttribute("data-theme", next);
-    localStorage.setItem("theme", next);
-  };
-
-  // Prevent flash of wrong theme on mount
-  if (!mounted) {
-    return <>{children}</>;
-  }
 
   return (
     <ThemeContext.Provider value={{ theme, toggle }}>

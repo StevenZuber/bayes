@@ -1,9 +1,11 @@
 "use client";
 
+import { useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { BayesParams } from "@/types";
 import { calculateBayes, formatPercent } from "@/lib/bayes";
 import { useThemeColors } from "@/lib/theme-colors";
+import { OUTCOME_LABELS, outcomeColors, type Outcome } from "@/lib/outcomes";
 
 interface FormulaDisplayProps {
   params: BayesParams;
@@ -18,7 +20,15 @@ export default function FormulaDisplay({
 }: FormulaDisplayProps) {
   const result = calculateBayes(params);
   const colors = useThemeColors();
+  const palette = useMemo(() => outcomeColors(colors), [colors]);
   const { prevalence, sensitivity, specificity } = params;
+
+  const outcomeCounts: Record<Outcome, number> = {
+    "true-positive": result.truePositives,
+    "false-positive": result.falsePositives,
+    "false-negative": result.falseNegatives,
+    "true-negative": result.trueNegatives,
+  };
 
   return (
     <div className={`font-mono text-sm ${className}`}>
@@ -99,22 +109,22 @@ export default function FormulaDisplay({
                 In natural frequencies (out of {result.population})
               </div>
               <div className="grid grid-cols-2 gap-1">
-                <span>
-                  <span className="inline-block w-2 h-2 rounded-full mr-1" style={{ backgroundColor: colors.tp }} />
-                  True positives: {result.truePositives}
-                </span>
-                <span>
-                  <span className="inline-block w-2 h-2 rounded-full mr-1" style={{ backgroundColor: colors.fp }} />
-                  False positives: {result.falsePositives}
-                </span>
-                <span>
-                  <span className="inline-block w-2 h-2 rounded-full mr-1" style={{ backgroundColor: colors.fn }} />
-                  False negatives: {result.falseNegatives}
-                </span>
-                <span>
-                  <span className="inline-block w-2 h-2 rounded-full mr-1" style={{ backgroundColor: colors.tn }} />
-                  True negatives: {result.trueNegatives}
-                </span>
+                {(
+                  [
+                    "true-positive",
+                    "false-positive",
+                    "false-negative",
+                    "true-negative",
+                  ] as const
+                ).map((outcome) => (
+                  <span key={outcome}>
+                    <span
+                      className="inline-block w-2 h-2 rounded-full mr-1"
+                      style={{ backgroundColor: palette[outcome].bg }}
+                    />
+                    {OUTCOME_LABELS[outcome]}s: {outcomeCounts[outcome]}
+                  </span>
+                ))}
               </div>
             </div>
           </motion.div>

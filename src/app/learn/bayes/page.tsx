@@ -120,30 +120,36 @@ export default function LearnBayesPage() {
         <button
           onClick={prev}
           disabled={step === 0}
-          className="px-4 py-2 text-sm font-medium text-text-secondary hover:text-foreground disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+          className="min-h-[44px] px-4 py-2 text-sm font-medium text-text-secondary hover:text-foreground disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
         >
           Back
         </button>
-        <div className="flex gap-1.5">
+        <nav className="flex" aria-label="Lesson steps">
           {Array.from({ length: TOTAL_STEPS }).map((_, i) => (
             <button
               key={i}
               onClick={() => setStep(i)}
-              aria-label={`Go to step ${i + 1}`}
-              className={`w-2 h-2 rounded-full transition-colors ${
-                i === step
-                  ? "bg-indigo-500"
-                  : i < step
-                    ? "bg-indigo-800"
-                    : "bg-surface-elevated"
-              }`}
-            />
+              aria-label={`Go to step ${i + 1} of ${TOTAL_STEPS}`}
+              aria-current={i === step ? "step" : undefined}
+              className="flex items-center justify-center w-11 h-11"
+            >
+              <span
+                aria-hidden="true"
+                className={`w-2 h-2 rounded-full transition-colors ${
+                  i === step
+                    ? "bg-accent"
+                    : i < step
+                      ? "bg-accent-muted"
+                      : "bg-surface-elevated"
+                }`}
+              />
+            </button>
           ))}
-        </div>
+        </nav>
         {step < TOTAL_STEPS - 1 ? (
           <button
             onClick={next}
-            className="px-4 py-2 text-sm font-medium text-white rounded-lg transition-colors"
+            className="min-h-[44px] px-4 py-2 text-sm font-medium text-white rounded-lg transition-colors"
             style={{ backgroundColor: colors.accentIndigo }}
           >
             Continue
@@ -151,7 +157,7 @@ export default function LearnBayesPage() {
         ) : (
           <Link
             href="/explore/bayes"
-            className="px-4 py-2 text-sm font-medium text-white rounded-lg transition-colors"
+            className="inline-flex items-center min-h-[44px] px-4 py-2 text-sm font-medium text-white rounded-lg transition-colors"
             style={{ backgroundColor: colors.accentPurple }}
           >
             Open sandbox
@@ -242,7 +248,7 @@ function StepGuess({
         {!hasGuessed ? (
           <button
             onClick={submitGuess}
-            className="mt-6 px-6 py-2.5 text-sm font-medium text-white rounded-lg transition-colors"
+            className="mt-6 min-h-[44px] px-6 py-2.5 text-sm font-medium text-white rounded-lg transition-colors"
             style={{ backgroundColor: colors.accentIndigo }}
           >
             Lock in my guess

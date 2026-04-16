@@ -1,13 +1,19 @@
 import { BayesParams, BayesResult } from "@/types";
 
 /**
+ * Default population used by the visualizations. Keep this in sync with
+ * copy that references "1,000 people" in the learn flow.
+ */
+export const DEFAULT_POPULATION = 1000;
+
+/**
  * Calculate Bayes' theorem results using natural frequencies.
  * This mirrors how the visualization works: start with a population,
  * split by condition, then split by test result.
  */
 export function calculateBayes(
   params: BayesParams,
-  population: number = 1000
+  population: number = DEFAULT_POPULATION
 ): BayesResult {
   const { prevalence, sensitivity, specificity } = params;
 
@@ -45,7 +51,7 @@ export function formatPercent(value: number, decimals: number = 1): string {
  */
 export function assignDotStates(
   params: BayesParams,
-  population: number = 1000
+  population: number = DEFAULT_POPULATION
 ): Array<"true-positive" | "false-positive" | "true-negative" | "false-negative"> {
   const result = calculateBayes(params, population);
   const states: Array<"true-positive" | "false-positive" | "true-negative" | "false-negative"> = [];
@@ -56,7 +62,9 @@ export function assignDotStates(
   for (let i = 0; i < result.falsePositives; i++) states.push("false-positive");
   for (let i = 0; i < result.trueNegatives; i++) states.push("true-negative");
 
-  // Pad or trim to exact population (rounding can cause off-by-one)
+  // Rounding each of the four counts independently can leave us one dot short or over.
+  // TN is typically the largest bucket (healthy population >> sick), so absorbing the
+  // off-by-one into TN produces the smallest visual distortion.
   while (states.length < population) states.push("true-negative");
   if (states.length > population) states.length = population;
 

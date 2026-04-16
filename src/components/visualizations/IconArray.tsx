@@ -3,15 +3,14 @@
 import { useMemo } from "react";
 import { motion } from "framer-motion";
 import { BayesParams } from "@/types";
-import { assignDotStates } from "@/lib/bayes";
+import { assignDotStates, DEFAULT_POPULATION } from "@/lib/bayes";
 import { useThemeColors } from "@/lib/theme-colors";
-
-const DOT_LABELS = {
-  "true-positive": "True positive",
-  "false-positive": "False positive",
-  "true-negative": "True negative",
-  "false-negative": "False negative",
-};
+import {
+  OUTCOMES,
+  OUTCOME_LABELS,
+  outcomeColors,
+  type Outcome,
+} from "@/lib/outcomes";
 
 interface IconArrayProps {
   params: BayesParams;
@@ -23,26 +22,20 @@ interface IconArrayProps {
 
 export default function IconArray({
   params,
-  population = 1000,
+  population = DEFAULT_POPULATION,
   highlightPositives = false,
   phase = "full",
   className = "",
 }: IconArrayProps) {
   const cols = Math.ceil(Math.sqrt(population));
   const colors = useThemeColors();
+  const palette = useMemo(() => outcomeColors(colors), [colors]);
   const dotStates = useMemo(
     () => assignDotStates(params, population),
     [params, population]
   );
 
-  const dotColors = {
-    "true-positive": colors.tp,
-    "false-positive": colors.fp,
-    "true-negative": colors.tn,
-    "false-negative": colors.fn,
-  };
-
-  function getDotColor(state: string, index: number): string {
+  function getDotColor(state: Outcome, index: number): string {
     if (phase === "population") return colors.tn;
 
     const withConditionCount = Math.round(population * params.prevalence);
@@ -52,10 +45,10 @@ export default function IconArray({
       return hasCondition ? colors.tp : colors.tn;
     }
 
-    return dotColors[state as keyof typeof dotColors] ?? colors.tn;
+    return palette[state].bg;
   }
 
-  function getDotOpacity(state: string): number {
+  function getDotOpacity(state: Outcome): number {
     if (!highlightPositives) return 1;
     if (state === "true-positive" || state === "false-positive") return 1;
     return 0.12;
@@ -94,22 +87,25 @@ export default function IconArray({
 
       {/* Legend */}
       {phase !== "population" && (
-        <div className="flex flex-wrap gap-x-4 gap-y-1 mt-4 text-sm text-text-secondary">
+        <ul
+          className="flex flex-wrap gap-x-4 gap-y-1 mt-4 text-sm text-text-secondary list-none p-0"
+          aria-label="Legend"
+        >
           {phase === "prior" ? (
             <>
               <LegendItem color={colors.tp} label="Has condition" />
               <LegendItem color={colors.tn} label="No condition" />
             </>
           ) : (
-            Object.entries(dotColors).map(([state, color]) => (
+            OUTCOMES.map((outcome) => (
               <LegendItem
-                key={state}
-                color={color}
-                label={DOT_LABELS[state as keyof typeof DOT_LABELS]}
+                key={outcome}
+                color={palette[outcome].bg}
+                label={OUTCOME_LABELS[outcome]}
               />
             ))
           )}
-        </div>
+        </ul>
       )}
     </div>
   );
@@ -117,12 +113,13 @@ export default function IconArray({
 
 function LegendItem({ color, label }: { color: string; label: string }) {
   return (
-    <div className="flex items-center gap-1.5">
-      <div
-        className="rounded-full"
+    <li className="flex items-center gap-1.5">
+      <span
+        aria-hidden="true"
+        className="rounded-full inline-block"
         style={{ width: 10, height: 10, backgroundColor: color }}
       />
       <span>{label}</span>
-    </div>
+    </li>
   );
 }

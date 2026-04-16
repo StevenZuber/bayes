@@ -18,9 +18,10 @@ export default function ScenarioSelector({
         <button
           key={scenario.id}
           onClick={() => onSelect(scenario)}
-          className={`px-3 py-1.5 rounded-full text-sm font-medium transition-colors ${
+          aria-pressed={activeId === scenario.id}
+          className={`min-h-[44px] px-4 py-2 rounded-full text-sm font-medium transition-colors ${
             activeId === scenario.id
-              ? "bg-indigo-600 text-white"
+              ? "bg-accent-strong text-white"
               : "bg-surface-elevated text-text-secondary hover:bg-separator hover:text-foreground"
           }`}
         >

@@ -85,7 +85,11 @@ export default function ExploreBayesPage() {
         <div className="text-sm text-text-tertiary mb-1">
           P({activeScenario.conditionName} | {activeScenario.positiveLabel})
         </div>
-        <div className="text-5xl font-bold font-mono" style={{ color: colors.accentPurple }}>
+        <div
+          data-testid="posterior-value"
+          className="text-5xl font-bold font-mono"
+          style={{ color: colors.accentPurple }}
+        >
           {formatPercent(result.posterior)}
         </div>
         <div className="text-sm text-text-tertiary mt-1">

@@ -28,6 +28,10 @@ export interface ThemeColors {
   accentGray: string;
 }
 
+// Text colors chosen to clear WCAG AA (4.5:1) on their matching block background.
+// Dark-theme blocks are light/saturated, so text is near-black; light-theme blocks
+// are darker saturated, so text is near-white. The tn block is medium gray and
+// flips direction between themes.
 const DARK: ThemeColors = {
   tp: "#f87171",
   fp: "#fb923c",
@@ -35,10 +39,10 @@ const DARK: ThemeColors = {
   tn: "#4B4B4F",
   priorBlock: "#991b1b",
   noConditionBlock: "#3A3A3C",
-  tpText: "#fecaca",
-  fpText: "#fed7aa",
-  fnText: "#bfdbfe",
-  tnText: "#e5e7eb",
+  tpText: "#450a0a",
+  fpText: "#431407",
+  fnText: "#172554",
+  tnText: "#f9fafb",
   priorText: "#fecaca",
   priorValue: "#fee2e2",
   noConditionText: "#d1d5db",
@@ -53,21 +57,21 @@ const DARK: ThemeColors = {
 
 const LIGHT: ThemeColors = {
   tp: "#dc2626",
-  fp: "#ea580c",
+  fp: "#c2410c",
   fn: "#2563eb",
   tn: "#d1d5db",
   priorBlock: "#fecaca",
   noConditionBlock: "#e5e7eb",
-  tpText: "#991b1b",
-  fpText: "#9a3412",
-  fnText: "#1e40af",
-  tnText: "#374151",
+  tpText: "#ffffff",
+  fpText: "#ffffff",
+  fnText: "#ffffff",
+  tnText: "#111827",
   priorText: "#991b1b",
   priorValue: "#7f1d1d",
   noConditionText: "#4b5563",
   noConditionValue: "#374151",
   accentRed: "#dc2626",
-  accentOrange: "#ea580c",
+  accentOrange: "#c2410c",
   accentBlue: "#2563eb",
   accentPurple: "#7c3aed",
   accentIndigo: "#4f46e5",

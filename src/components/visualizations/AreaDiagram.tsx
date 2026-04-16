@@ -1,9 +1,11 @@
 "use client";
 
+import { useMemo } from "react";
 import { motion } from "framer-motion";
 import { BayesParams } from "@/types";
 import { calculateBayes, formatPercent } from "@/lib/bayes";
 import { useThemeColors } from "@/lib/theme-colors";
+import { OUTCOME_SHORT_LABELS, outcomeColors } from "@/lib/outcomes";
 
 interface AreaDiagramProps {
   params: BayesParams;
@@ -18,6 +20,7 @@ export default function AreaDiagram({
 }: AreaDiagramProps) {
   const result = calculateBayes(params);
   const colors = useThemeColors();
+  const palette = useMemo(() => outcomeColors(colors), [colors]);
   const { prevalence, sensitivity, specificity } = params;
 
   const leftWidth = Math.max(prevalence, 0.02);
@@ -77,9 +80,9 @@ export default function AreaDiagram({
         ) : (
           <>
             <AreaBlock
-              color={colors.tp}
-              textColor={colors.tpText}
-              label="True +"
+              color={palette["true-positive"].bg}
+              textColor={palette["true-positive"].text}
+              label={OUTCOME_SHORT_LABELS["true-positive"]}
               value={result.truePositives}
               x={0}
               y={0}
@@ -89,9 +92,9 @@ export default function AreaDiagram({
               showLabel={phase === "full"}
             />
             <AreaBlock
-              color={colors.fn}
-              textColor={colors.fnText}
-              label="False −"
+              color={palette["false-negative"].bg}
+              textColor={palette["false-negative"].text}
+              label={OUTCOME_SHORT_LABELS["false-negative"]}
               value={result.falseNegatives}
               x={0}
               y={leftTopHeight}
@@ -101,9 +104,9 @@ export default function AreaDiagram({
               showLabel={phase === "full"}
             />
             <AreaBlock
-              color={colors.fp}
-              textColor={colors.fpText}
-              label="False +"
+              color={palette["false-positive"].bg}
+              textColor={palette["false-positive"].text}
+              label={OUTCOME_SHORT_LABELS["false-positive"]}
               value={result.falsePositives}
               x={leftWidth}
               y={0}
@@ -113,9 +116,9 @@ export default function AreaDiagram({
               showLabel={phase === "full"}
             />
             <AreaBlock
-              color={colors.tn}
-              textColor={colors.tnText}
-              label="True −"
+              color={palette["true-negative"].bg}
+              textColor={palette["true-negative"].text}
+              label={OUTCOME_SHORT_LABELS["true-negative"]}
               value={result.trueNegatives}
               x={leftWidth}
               y={rightTopHeight}

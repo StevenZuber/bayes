@@ -9,6 +9,9 @@
   --separator: #38383A;
   --text-secondary: #AEAEB2;
   --text-tertiary: #7C7C80;
+  --accent: #818cf8;
+  --accent-strong: #6366f1;
+  --accent-muted: #3730a3;
 }
 
 /* ===== Light theme ===== */
@@ -20,6 +23,9 @@
   --separator: #D1D1D6;
   --text-secondary: #636366;
   --text-tertiary: #8E8E93;
+  --accent: #4f46e5;
+  --accent-strong: #4338ca;
+  --accent-muted: #c7d2fe;
 }
 
 @theme inline {
@@ -30,6 +36,9 @@
   --color-separator: var(--separator);
   --color-text-secondary: var(--text-secondary);
   --color-text-tertiary: var(--text-tertiary);
+  --color-accent: var(--accent);
+  --color-accent-strong: var(--accent-strong);
+  --color-accent-muted: var(--accent-muted);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
