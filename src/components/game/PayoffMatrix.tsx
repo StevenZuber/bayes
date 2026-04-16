@@ -11,10 +11,10 @@ type Highlight = "none" | "dominant-row" | "dominant-col" | "nash" | "pareto" | 
 interface PayoffMatrixProps {
   scenario: GameScenario;
   highlight?: Highlight;
-  /** Optionally spotlight a single cell (e.g., the current round's outcome). */
   spotlightCell?: { row: Action; col: Action } | null;
-  /** Editable payoffs — when provided, the matrix becomes interactive. */
   onPayoffChange?: (row: Action, col: Action, which: "row" | "col", value: number) => void;
+  /** When true, shows a legend below explaining any markers. */
+  showLegend?: boolean;
   className?: string;
 }
 
@@ -23,6 +23,7 @@ export default function PayoffMatrix({
   highlight = "none",
   spotlightCell = null,
   onPayoffChange,
+  showLegend = true,
   className = "",
 }: PayoffMatrixProps) {
   const colors = useThemeColors();
@@ -31,17 +32,19 @@ export default function PayoffMatrix({
   const nashSet = new Set(analysis.nashEquilibria.map((e) => cellKey(e.row, e.col)));
   const paretoSet = new Set(analysis.paretoOptimal.map((p) => cellKey(p.row, p.col)));
 
-  function cellBg(row: Action, col: Action): string {
+  const showNash = highlight === "nash" || highlight === "all";
+  const showPareto = highlight === "pareto" || highlight === "all";
+
+  function cellTint(row: Action, col: Action): string {
     const key = cellKey(row, col);
     const isSpotlight = spotlightCell && spotlightCell.row === row && spotlightCell.col === col;
-    if (isSpotlight) return colors.accentPurple;
-    if ((highlight === "nash" || highlight === "all") && nashSet.has(key)) return colors.accentRed;
-    if ((highlight === "pareto" || highlight === "all") && paretoSet.has(key))
-      return colors.accentBlue;
+    if (isSpotlight) return `${colors.accentPurple}33`;
+    if (showNash && nashSet.has(key)) return `${colors.accentRed}22`;
+    if (showPareto && paretoSet.has(key)) return `${colors.accentBlue}22`;
     return "transparent";
   }
 
-  function cellBorder(row: Action, col: Action): string {
+  function cellRing(row: Action, col: Action): string {
     if (highlight === "dominant-row" && analysis.rowDominant === row) return colors.accentRed;
     if (highlight === "dominant-col" && analysis.colDominant === col) return colors.accentBlue;
     return "transparent";
@@ -51,106 +54,157 @@ export default function PayoffMatrix({
   const actionLabel = (a: Action) => (a === "C" ? cooperate : defect);
 
   return (
-    <div className={`inline-block ${className}`}>
-      <div className="grid grid-cols-[auto_1fr_1fr] grid-rows-[auto_auto_1fr_1fr] gap-1 text-sm">
-        {/* Top-left spacer */}
+    <div className={`w-full ${className}`}>
+      {/* Top player label */}
+      <div
+        className="text-xs font-semibold uppercase tracking-wide text-center mb-1"
+        style={{ color: colors.accentBlue }}
+      >
+        {colPlayer}
+      </div>
+
+      <div className="grid grid-cols-[auto_1fr_1fr] gap-1">
+        {/* Empty corner */}
         <div />
-        {/* Col player label spanning both action columns */}
-        <div
-          className="col-span-2 text-center text-xs font-semibold uppercase tracking-wide text-text-tertiary pb-1"
-          style={{ color: colors.accentBlue }}
-        >
-          {colPlayer}
-        </div>
-
-        {/* Row player side label */}
-        <div
-          className="row-span-3 flex items-center justify-center text-xs font-semibold uppercase tracking-wide"
-          style={{ color: colors.accentRed, writingMode: "vertical-rl", transform: "rotate(180deg)" }}
-        >
-          {rowPlayer}
-        </div>
-
-        {/* Col action headers */}
-        <HeaderCell label={actionLabel("C")} subLabel="C" />
-        <HeaderCell label={actionLabel("D")} subLabel="D" />
+        {/* Column action headers */}
+        <ActionHeader label={actionLabel("C")} letter="C" />
+        <ActionHeader label={actionLabel("D")} letter="D" />
 
         {/* Row: C */}
-        <RowHeader label={actionLabel("C")} subLabel="C" />
+        <RowLabel
+          rowPlayer={rowPlayer}
+          label={actionLabel("C")}
+          letter="C"
+          color={colors.accentRed}
+          showRowPlayer
+        />
         <Cell
           row="C"
           col="C"
           scenario={scenario}
-          bg={cellBg("C", "C")}
-          border={cellBorder("C", "C")}
+          tint={cellTint("C", "C")}
+          ring={cellRing("C", "C")}
           onPayoffChange={onPayoffChange}
-          badges={badges(nashSet, paretoSet, highlight, "C", "C")}
+          markers={cellMarkers(nashSet, paretoSet, showNash, showPareto, "C", "C", colors.accentRed, colors.accentBlue)}
         />
         <Cell
           row="C"
           col="D"
           scenario={scenario}
-          bg={cellBg("C", "D")}
-          border={cellBorder("C", "D")}
+          tint={cellTint("C", "D")}
+          ring={cellRing("C", "D")}
           onPayoffChange={onPayoffChange}
-          badges={badges(nashSet, paretoSet, highlight, "C", "D")}
+          markers={cellMarkers(nashSet, paretoSet, showNash, showPareto, "C", "D", colors.accentRed, colors.accentBlue)}
         />
 
         {/* Row: D */}
-        <RowHeader label={actionLabel("D")} subLabel="D" />
+        <RowLabel
+          rowPlayer={rowPlayer}
+          label={actionLabel("D")}
+          letter="D"
+          color={colors.accentRed}
+        />
         <Cell
           row="D"
           col="C"
           scenario={scenario}
-          bg={cellBg("D", "C")}
-          border={cellBorder("D", "C")}
+          tint={cellTint("D", "C")}
+          ring={cellRing("D", "C")}
           onPayoffChange={onPayoffChange}
-          badges={badges(nashSet, paretoSet, highlight, "D", "C")}
+          markers={cellMarkers(nashSet, paretoSet, showNash, showPareto, "D", "C", colors.accentRed, colors.accentBlue)}
         />
         <Cell
           row="D"
           col="D"
           scenario={scenario}
-          bg={cellBg("D", "D")}
-          border={cellBorder("D", "D")}
+          tint={cellTint("D", "D")}
+          ring={cellRing("D", "D")}
           onPayoffChange={onPayoffChange}
-          badges={badges(nashSet, paretoSet, highlight, "D", "D")}
+          markers={cellMarkers(nashSet, paretoSet, showNash, showPareto, "D", "D", colors.accentRed, colors.accentBlue)}
         />
       </div>
+
+      {showLegend &&
+        ((showNash && nashSet.size > 0) || (showPareto && paretoSet.size > 0)) && (
+          <div className="mt-3 flex flex-wrap gap-x-4 gap-y-1 text-xs text-text-secondary">
+            {showNash && nashSet.size > 0 && (
+              <span className="flex items-center gap-1.5">
+                <span
+                  className="inline-block w-2.5 h-2.5 rounded-full"
+                  style={{ backgroundColor: colors.accentRed }}
+                />
+                Nash equilibrium
+              </span>
+            )}
+            {showPareto && paretoSet.size > 0 && (
+              <span className="flex items-center gap-1.5">
+                <span
+                  className="inline-block w-2.5 h-2.5 rounded-full"
+                  style={{ backgroundColor: colors.accentBlue }}
+                />
+                Pareto optimal
+              </span>
+            )}
+          </div>
+        )}
     </div>
   );
 }
 
-function badges(
+function cellMarkers(
   nashSet: Set<string>,
   paretoSet: Set<string>,
-  highlight: Highlight,
+  showNash: boolean,
+  showPareto: boolean,
   row: Action,
-  col: Action
-): Array<{ label: string; color: "nash" | "pareto" }> {
+  col: Action,
+  nashColor: string,
+  paretoColor: string
+): Array<{ color: string; title: string }> {
   const key = cellKey(row, col);
-  const out: Array<{ label: string; color: "nash" | "pareto" }> = [];
-  if ((highlight === "nash" || highlight === "all") && nashSet.has(key))
-    out.push({ label: "Nash", color: "nash" });
-  if ((highlight === "pareto" || highlight === "all") && paretoSet.has(key))
-    out.push({ label: "Pareto", color: "pareto" });
+  const out: Array<{ color: string; title: string }> = [];
+  if (showNash && nashSet.has(key)) out.push({ color: nashColor, title: "Nash equilibrium" });
+  if (showPareto && paretoSet.has(key))
+    out.push({ color: paretoColor, title: "Pareto optimal" });
   return out;
 }
 
-function HeaderCell({ label, subLabel }: { label: string; subLabel: string }) {
+function ActionHeader({ label, letter }: { label: string; letter: string }) {
   return (
-    <div className="text-center py-1 font-semibold text-foreground">
-      {label}
-      <span className="ml-1 font-mono text-xs text-text-tertiary">({subLabel})</span>
+    <div className="text-center text-xs sm:text-sm font-semibold text-foreground py-1 px-1 truncate">
+      <div className="truncate">{label}</div>
+      <span className="font-mono text-[10px] text-text-tertiary">({letter})</span>
     </div>
   );
 }
 
-function RowHeader({ label, subLabel }: { label: string; subLabel: string }) {
+function RowLabel({
+  rowPlayer,
+  label,
+  letter,
+  color,
+  showRowPlayer = false,
+}: {
+  rowPlayer: string;
+  label: string;
+  letter: string;
+  color: string;
+  showRowPlayer?: boolean;
+}) {
   return (
-    <div className="flex items-center justify-end pr-2 font-semibold text-foreground">
-      {label}
-      <span className="ml-1 font-mono text-xs text-text-tertiary">({subLabel})</span>
+    <div className="flex flex-col items-end justify-center pr-2 text-right">
+      {showRowPlayer && (
+        <div
+          className="text-[10px] font-semibold uppercase tracking-wide mb-0.5"
+          style={{ color }}
+        >
+          {rowPlayer}
+        </div>
+      )}
+      <div className="text-xs sm:text-sm font-semibold text-foreground leading-tight">
+        {label}
+      </div>
+      <span className="font-mono text-[10px] text-text-tertiary">({letter})</span>
     </div>
   );
 }
@@ -159,18 +213,18 @@ function Cell({
   row,
   col,
   scenario,
-  bg,
-  border,
+  tint,
+  ring,
   onPayoffChange,
-  badges,
+  markers,
 }: {
   row: Action;
   col: Action;
   scenario: GameScenario;
-  bg: string;
-  border: string;
+  tint: string;
+  ring: string;
   onPayoffChange?: (row: Action, col: Action, which: "row" | "col", value: number) => void;
-  badges: Array<{ label: string; color: "nash" | "pareto" }>;
+  markers: Array<{ color: string; title: string }>;
 }) {
   const colors = useThemeColors();
   const cell = scenario.matrix[row][col];
@@ -178,16 +232,30 @@ function Cell({
   return (
     <motion.div
       initial={false}
-      animate={{ backgroundColor: bg }}
+      animate={{ backgroundColor: tint === "transparent" ? "var(--surface-elevated)" : tint }}
       transition={{ duration: 0.3 }}
-      className="relative min-w-[120px] min-h-[80px] flex items-center justify-center rounded-lg border-2"
+      className="relative min-h-[64px] sm:min-h-[80px] flex items-center justify-center rounded-lg border-2"
       style={{
-        borderColor: border === "transparent" ? "var(--separator)" : border,
-        backgroundColor: bg === "transparent" ? "var(--surface)" : undefined,
+        borderColor: ring === "transparent" ? "var(--separator)" : ring,
       }}
       data-testid={`cell-${row}${col}`}
     >
-      <div className="flex items-center gap-3 font-mono text-lg">
+      {/* Marker dots, top-right corner */}
+      {markers.length > 0 && (
+        <div className="absolute top-1 right-1 flex gap-1">
+          {markers.map((m) => (
+            <span
+              key={m.title}
+              title={m.title}
+              aria-label={m.title}
+              className="inline-block w-2 h-2 rounded-full"
+              style={{ backgroundColor: m.color }}
+            />
+          ))}
+        </div>
+      )}
+
+      <div className="flex items-center gap-1.5 font-mono text-base sm:text-lg">
         {onPayoffChange ? (
           <>
             <PayoffInput
@@ -216,22 +284,6 @@ function Cell({
           </>
         )}
       </div>
-      {badges.length > 0 && (
-        <div className="absolute top-1 right-1 flex gap-1">
-          {badges.map((b) => (
-            <span
-              key={b.label}
-              className="px-1.5 py-0.5 rounded text-[10px] font-semibold text-white"
-              style={{
-                backgroundColor:
-                  b.color === "nash" ? colors.accentRed : colors.accentBlue,
-              }}
-            >
-              {b.label}
-            </span>
-          ))}
-        </div>
-      )}
     </motion.div>
   );
 }
@@ -257,7 +309,7 @@ function PayoffInput({
         const v = parseInt(e.target.value, 10);
         if (!Number.isNaN(v)) onChange(v);
       }}
-      className="w-12 bg-transparent border-b border-separator font-bold text-center focus:outline-none focus:border-current"
+      className="w-10 sm:w-12 bg-transparent border-b border-separator font-bold text-center focus:outline-none focus:border-current"
       style={{ color }}
     />
   );

@@ -1,7 +1,7 @@
 import { render, screen, fireEvent } from "@testing-library/react";
-import LearnGameTheoryPage from "@/app/learn/game-theory/page";
+import LearnGameTheoryPage from "@/app/learn/game-theory/prisoners-dilemma/page";
 
-describe("learn/game-theory page", () => {
+describe("learn/game-theory/prisoners-dilemma page", () => {
   it("starts on the hook step", () => {
     render(<LearnGameTheoryPage />);
     expect(screen.getByText(/Step 1 of 8/i)).toBeInTheDocument();

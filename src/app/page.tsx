@@ -29,6 +29,8 @@ export default function Home() {
           hook="Two suspects, two rooms, one choice each. Acting rationally, both end up worse than if they'd cooperated. The simplest setup in game theory — and the most revealing."
           learnHref="/learn/game-theory"
           exploreHref="/explore/game-theory"
+          learnEyebrow="Lesson series"
+          learnLabel="Browse lessons"
         />
       </div>
 
@@ -46,12 +48,16 @@ function Topic({
   hook,
   learnHref,
   exploreHref,
+  learnEyebrow = "Guided lesson",
+  learnLabel = "Learn from scratch",
 }: {
   eyebrow: string;
   title: string;
   hook: string;
   learnHref: string;
   exploreHref: string;
+  learnEyebrow?: string;
+  learnLabel?: string;
 }) {
   return (
     <section className="bg-surface rounded-2xl p-8 border border-separator">
@@ -66,10 +72,10 @@ function Topic({
           className="group block p-4 rounded-xl border-2 border-separator hover:border-indigo-500 transition-colors bg-background"
         >
           <div className="text-sm font-medium text-indigo-400 mb-1">
-            Guided lesson
+            {learnEyebrow}
           </div>
           <div className="text-foreground font-semibold group-hover:text-indigo-400 transition-colors">
-            Learn from scratch →
+            {learnLabel} →
           </div>
         </Link>
         <Link

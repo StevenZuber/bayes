@@ -67,4 +67,26 @@ export const gameScenarios: GameScenario[] = [
       colPlayer: "Driver B",
     },
   },
+  {
+    id: "matching-pennies",
+    name: "Matching Pennies",
+    description:
+      "Row wins when both pennies match; Column wins when they don't. A zero-sum game with no pure Nash equilibrium.",
+    matrix: {
+      C: {
+        C: { row: 1, col: -1 },
+        D: { row: -1, col: 1 },
+      },
+      D: {
+        C: { row: -1, col: 1 },
+        D: { row: 1, col: -1 },
+      },
+    },
+    labels: {
+      cooperate: "Heads",
+      defect: "Tails",
+      rowPlayer: "Row",
+      colPlayer: "Column",
+    },
+  },
 ];
