@@ -69,23 +69,23 @@ function Topic({
       <div className="grid sm:grid-cols-2 gap-3">
         <Link
           href={learnHref}
-          className="group block p-4 rounded-xl border-2 border-separator hover:border-indigo-500 transition-colors bg-background"
+          className="group block p-4 rounded-xl border-2 border-separator hover:border-accent-strong transition-colors bg-background"
         >
-          <div className="text-sm font-medium text-indigo-400 mb-1">
+          <div className="text-sm font-medium text-accent mb-1">
             {learnEyebrow}
           </div>
-          <div className="text-foreground font-semibold group-hover:text-indigo-400 transition-colors">
+          <div className="text-foreground font-semibold group-hover:text-accent transition-colors">
             {learnLabel} →
           </div>
         </Link>
         <Link
           href={exploreHref}
-          className="group block p-4 rounded-xl border-2 border-separator hover:border-purple-500 transition-colors bg-background"
+          className="group block p-4 rounded-xl border-2 border-separator hover:border-accent-purple transition-colors bg-background"
         >
-          <div className="text-sm font-medium text-purple-400 mb-1">
+          <div className="text-sm font-medium text-accent-purple mb-1">
             Interactive sandbox
           </div>
-          <div className="text-foreground font-semibold group-hover:text-purple-400 transition-colors">
+          <div className="text-foreground font-semibold group-hover:text-accent-purple transition-colors">
             Explore freely →
           </div>
         </Link>

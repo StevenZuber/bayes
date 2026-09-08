@@ -12,6 +12,7 @@
   --accent: #818cf8;
   --accent-strong: #6366f1;
   --accent-muted: #3730a3;
+  --accent-purple: #c084fc;
 }
 
 /* ===== Light theme ===== */
@@ -26,6 +27,7 @@
   --accent: #4f46e5;
   --accent-strong: #4338ca;
   --accent-muted: #c7d2fe;
+  --accent-purple: #7c3aed;
 }
 
 @theme inline {
@@ -39,6 +41,7 @@
   --color-accent: var(--accent);
   --color-accent-strong: var(--accent-strong);
   --color-accent-muted: var(--accent-muted);
+  --color-accent-purple: var(--accent-purple);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }

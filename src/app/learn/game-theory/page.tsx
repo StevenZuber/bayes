@@ -46,16 +46,16 @@ export default function GameTheoryIndexPage() {
           <li key={lesson.slug}>
             <Link
               href={`/learn/game-theory/${lesson.slug}`}
-              className="group flex gap-4 p-5 rounded-xl border-2 border-separator hover:border-indigo-500 transition-colors bg-surface"
+              className="group flex gap-4 p-5 rounded-xl border-2 border-separator hover:border-accent-strong transition-colors bg-surface"
             >
               <div className="shrink-0 w-10 h-10 rounded-full bg-surface-elevated flex items-center justify-center font-mono text-sm text-text-secondary">
                 {i + 1}
               </div>
               <div className="flex-1 min-w-0">
-                <div className="text-xs font-medium text-indigo-400 uppercase tracking-wide mb-1">
+                <div className="text-xs font-medium text-accent uppercase tracking-wide mb-1">
                   {lesson.eyebrow}
                 </div>
-                <div className="text-lg font-semibold text-foreground group-hover:text-indigo-400 transition-colors">
+                <div className="text-lg font-semibold text-foreground group-hover:text-accent transition-colors">
                   {lesson.title}
                 </div>
                 <p className="text-sm text-text-secondary mt-1">
