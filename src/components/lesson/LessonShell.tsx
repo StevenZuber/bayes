@@ -55,18 +55,21 @@ export default function LessonShell({ steps, finish }: LessonShellProps) {
         <button
           onClick={prev}
           disabled={step === 0}
-          className="min-h-[44px] px-4 py-2 text-sm font-medium text-text-secondary hover:text-foreground disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+          className="shrink-0 min-h-[44px] px-4 py-2 text-sm font-medium text-text-secondary hover:text-foreground disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
         >
           Back
         </button>
-        <nav className="flex" aria-label="Lesson steps">
+        {/* min-w-0 + shrink: dots keep 44px targets when there's room, but on
+            narrow viewports they compress instead of pushing Continue
+            off-screen (9 full-width dots alone exceed a 375px viewport). */}
+        <nav className="flex flex-1 min-w-0 justify-center" aria-label="Lesson steps">
           {Array.from({ length: total }).map((_, i) => (
             <button
               key={i}
               onClick={() => setStep(i)}
               aria-label={`Go to step ${i + 1} of ${total}`}
               aria-current={i === step ? "step" : undefined}
-              className="flex items-center justify-center w-11 h-11"
+              className="flex items-center justify-center w-11 h-11 min-w-0 shrink"
             >
               <span
                 aria-hidden="true"
@@ -84,7 +87,7 @@ export default function LessonShell({ steps, finish }: LessonShellProps) {
         {step < total - 1 ? (
           <button
             onClick={next}
-            className="min-h-[44px] px-4 py-2 text-sm font-medium text-white rounded-lg transition-colors"
+            className="shrink-0 min-h-[44px] px-4 py-2 text-sm font-medium text-white rounded-lg transition-colors"
             style={{ backgroundColor: colors.accentIndigo }}
           >
             Continue
@@ -92,7 +95,7 @@ export default function LessonShell({ steps, finish }: LessonShellProps) {
         ) : finish ? (
           <Link
             href={finish.href}
-            className="inline-flex items-center min-h-[44px] px-4 py-2 text-sm font-medium text-white rounded-lg transition-colors"
+            className="shrink-0 inline-flex items-center min-h-[44px] px-4 py-2 text-sm font-medium text-white rounded-lg transition-colors"
             style={{ backgroundColor: colors.accentPurple }}
           >
             {finish.label}
