@@ -7,7 +7,7 @@ export default function Header() {
       <nav className="max-w-6xl mx-auto px-4 h-14 flex items-center justify-between">
         <Link
           href="/"
-          className="text-lg font-semibold text-foreground hover:text-indigo-400 transition-colors"
+          className="inline-flex items-center min-h-[44px] text-lg font-semibold text-foreground hover:text-accent transition-colors"
         >
           Seeing the Math
         </Link>
@@ -15,13 +15,13 @@ export default function Header() {
           <div className="hidden sm:flex gap-5 text-sm font-medium">
             <Link
               href="/learn/bayes"
-              className="text-text-secondary hover:text-indigo-400 transition-colors"
+              className="inline-flex items-center min-h-[44px] text-text-secondary hover:text-accent transition-colors"
             >
               Bayes
             </Link>
             <Link
               href="/learn/game-theory"
-              className="text-text-secondary hover:text-indigo-400 transition-colors"
+              className="inline-flex items-center min-h-[44px] text-text-secondary hover:text-accent transition-colors"
             >
               Game Theory
             </Link>

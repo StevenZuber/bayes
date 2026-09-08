@@ -1,4 +1,5 @@
 import { render } from "@testing-library/react";
+import Header from "@/components/layout/Header";
 import LearnBayesPage from "@/app/learn/bayes/page";
 import ExploreBayesPage from "@/app/explore/bayes/page";
 import GameTheoryIndexPage from "@/app/learn/game-theory/page";
@@ -62,6 +63,7 @@ function describeElement(el: HTMLElement): string {
 
 describe("touch target sizes", () => {
   it.each([
+    ["site header", <Header key="header" />],
     ["learn/bayes", <LearnBayesPage key="learn" />],
     ["explore/bayes", <ExploreBayesPage key="explore" />],
     ["learn/game-theory (index)", <GameTheoryIndexPage key="gt-idx" />],
