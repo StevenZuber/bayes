@@ -34,18 +34,3 @@ export interface Scenario {
   negativeLabel: string;
   defaults: BayesParams;
 }
-
-export type DotState =
-  | "true-positive"
-  | "false-positive"
-  | "true-negative"
-  | "false-negative";
-
-export interface LessonStep {
-  id: string;
-  title: string;
-  /** Which controls are interactive in this step */
-  interactiveControls: ("prevalence" | "sensitivity" | "specificity")[];
-  /** Which visualizations are visible */
-  visibleViz: ("icon-array" | "area-diagram" | "formula")[];
-}

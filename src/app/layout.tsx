@@ -15,9 +15,9 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Seeing Bayes — A Visual Guide to Bayes' Theorem",
+  title: "Seeing the Math — Visual, Interactive Lessons",
   description:
-    "Build intuition for Bayes' Theorem through interactive visualizations. See how prior beliefs, evidence, and posterior probabilities connect.",
+    "Build intuition through interactive visualizations: Bayes' Theorem, the Prisoner's Dilemma, Nash equilibria, and more — ideas that are easier to see than to read.",
   icons: {
     apple: "/apple-touch-icon.png",
   },

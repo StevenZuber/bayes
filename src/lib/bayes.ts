@@ -45,7 +45,7 @@ export function formatPercent(value: number, decimals: number = 1): string {
 }
 
 /**
- * Assign a DotState to each dot in the icon array.
+ * Assign an outcome state to each dot in the icon array.
  * Returns an array of length `population` with deterministic assignment
  * (condition holders first, then test results within each group).
  */
