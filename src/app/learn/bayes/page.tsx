@@ -1,12 +1,12 @@
 "use client";
 
 import { useState, useCallback } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import Link from "next/link";
+import { motion } from "framer-motion";
 import IconArray from "@/components/visualizations/IconArray";
 import AreaDiagram from "@/components/visualizations/AreaDiagram";
 import FormulaDisplay from "@/components/visualizations/FormulaDisplay";
 import ProbabilitySlider from "@/components/controls/ProbabilitySlider";
+import LessonShell from "@/components/lesson/LessonShell";
 import { BayesParams } from "@/types";
 import { calculateBayes, formatPercent } from "@/lib/bayes";
 import { useThemeColors } from "@/lib/theme-colors";
@@ -17,16 +17,12 @@ const INITIAL_PARAMS: BayesParams = {
   specificity: 0.95,
 };
 
-const TOTAL_STEPS = 9;
-
 export default function LearnBayesPage() {
-  const [step, setStep] = useState(0);
   const [params, setParams] = useState<BayesParams>(INITIAL_PARAMS);
   const [userGuess, setUserGuess] = useState<number | null>(null);
   const [hasGuessed, setHasGuessed] = useState(false);
 
   const result = calculateBayes(params);
-  const colors = useThemeColors();
 
   const updateParam = useCallback(
     (key: keyof BayesParams) => (value: number) => {
@@ -35,136 +31,53 @@ export default function LearnBayesPage() {
     []
   );
 
-  const next = () => setStep((s) => Math.min(s + 1, TOTAL_STEPS - 1));
-  const prev = () => setStep((s) => Math.max(s - 1, 0));
-
   const submitGuess = () => {
     if (userGuess !== null) setHasGuessed(true);
   };
 
+  const steps = [
+    <StepHook key="hook" />,
+    <StepGuess
+      key="guess"
+      userGuess={userGuess}
+      setUserGuess={setUserGuess}
+      hasGuessed={hasGuessed}
+      submitGuess={submitGuess}
+      actual={result.posterior}
+    />,
+    <StepPopulation key="population" params={params} />,
+    <StepPrior
+      key="prior"
+      params={params}
+      updatePrevalence={updateParam("prevalence")}
+    />,
+    <StepEvidence
+      key="evidence"
+      params={params}
+      updateSensitivity={updateParam("sensitivity")}
+      updateSpecificity={updateParam("specificity")}
+    />,
+    <StepReveal key="reveal" params={params} result={result} />,
+    <StepWhyItMatters
+      key="why"
+      params={params}
+      updatePrevalence={updateParam("prevalence")}
+    />,
+    <StepFormula key="formula" params={params} />,
+    <StepSandbox
+      key="sandbox"
+      params={params}
+      updatePrevalence={updateParam("prevalence")}
+      updateSensitivity={updateParam("sensitivity")}
+      updateSpecificity={updateParam("specificity")}
+    />,
+  ];
+
   return (
-    <div className="max-w-4xl mx-auto px-4 py-12">
-      {/* Progress bar */}
-      <div className="mb-8">
-        <div className="flex justify-between text-xs text-text-tertiary mb-1">
-          <span>
-            Step {step + 1} of {TOTAL_STEPS}
-          </span>
-          <span>{Math.round(((step + 1) / TOTAL_STEPS) * 100)}%</span>
-        </div>
-        <div className="h-1.5 bg-surface-elevated rounded-full overflow-hidden">
-          <motion.div
-            className="h-full rounded-full"
-            style={{ backgroundColor: colors.accentIndigo }}
-            initial={false}
-            animate={{ width: `${((step + 1) / TOTAL_STEPS) * 100}%` }}
-            transition={{ duration: 0.3 }}
-          />
-        </div>
-      </div>
-
-      {/* Step content */}
-      <AnimatePresence mode="wait">
-        <motion.div
-          key={step}
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -20 }}
-          transition={{ duration: 0.3 }}
-        >
-          {step === 0 && <StepHook />}
-          {step === 1 && (
-            <StepGuess
-              userGuess={userGuess}
-              setUserGuess={setUserGuess}
-              hasGuessed={hasGuessed}
-              submitGuess={submitGuess}
-              actual={result.posterior}
-            />
-          )}
-          {step === 2 && <StepPopulation params={params} />}
-          {step === 3 && (
-            <StepPrior
-              params={params}
-              updatePrevalence={updateParam("prevalence")}
-            />
-          )}
-          {step === 4 && (
-            <StepEvidence
-              params={params}
-              updateSensitivity={updateParam("sensitivity")}
-              updateSpecificity={updateParam("specificity")}
-            />
-          )}
-          {step === 5 && <StepReveal params={params} result={result} />}
-          {step === 6 && (
-            <StepWhyItMatters
-              params={params}
-              updatePrevalence={updateParam("prevalence")}
-            />
-          )}
-          {step === 7 && <StepFormula params={params} />}
-          {step === 8 && (
-            <StepSandbox
-              params={params}
-              updatePrevalence={updateParam("prevalence")}
-              updateSensitivity={updateParam("sensitivity")}
-              updateSpecificity={updateParam("specificity")}
-            />
-          )}
-        </motion.div>
-      </AnimatePresence>
-
-      {/* Navigation */}
-      <div className="flex justify-between items-center mt-12 pt-6 border-t border-separator">
-        <button
-          onClick={prev}
-          disabled={step === 0}
-          className="min-h-[44px] px-4 py-2 text-sm font-medium text-text-secondary hover:text-foreground disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
-        >
-          Back
-        </button>
-        <nav className="flex" aria-label="Lesson steps">
-          {Array.from({ length: TOTAL_STEPS }).map((_, i) => (
-            <button
-              key={i}
-              onClick={() => setStep(i)}
-              aria-label={`Go to step ${i + 1} of ${TOTAL_STEPS}`}
-              aria-current={i === step ? "step" : undefined}
-              className="flex items-center justify-center w-11 h-11"
-            >
-              <span
-                aria-hidden="true"
-                className={`w-2 h-2 rounded-full transition-colors ${
-                  i === step
-                    ? "bg-accent"
-                    : i < step
-                      ? "bg-accent-muted"
-                      : "bg-surface-elevated"
-                }`}
-              />
-            </button>
-          ))}
-        </nav>
-        {step < TOTAL_STEPS - 1 ? (
-          <button
-            onClick={next}
-            className="min-h-[44px] px-4 py-2 text-sm font-medium text-white rounded-lg transition-colors"
-            style={{ backgroundColor: colors.accentIndigo }}
-          >
-            Continue
-          </button>
-        ) : (
-          <Link
-            href="/explore/bayes"
-            className="inline-flex items-center min-h-[44px] px-4 py-2 text-sm font-medium text-white rounded-lg transition-colors"
-            style={{ backgroundColor: colors.accentPurple }}
-          >
-            Open sandbox
-          </Link>
-        )}
-      </div>
-    </div>
+    <LessonShell
+      steps={steps}
+      finish={{ label: "Open sandbox", href: "/explore/bayes" }}
+    />
   );
 }
 
