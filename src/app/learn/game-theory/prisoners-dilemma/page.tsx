@@ -61,11 +61,11 @@ function StepHook() {
         <ul className="text-lg text-text-secondary mb-4 ml-4 space-y-2 list-disc">
           <li>
             If you both <strong className="text-foreground">stay silent</strong>,
-            you each get 1 year. (A good outcome.)
+            you each get 2 years. (A good outcome.)
           </li>
           <li>
             If you both <strong className="text-foreground">rat out</strong> the
-            other, you each get 3 years.
+            other, you each get 4 years.
           </li>
           <li>
             If one rats and the other stays silent, the{" "}
@@ -373,12 +373,13 @@ function StepParadox() {
   );
 }
 
+const ITERATED_ROUNDS = 20;
+
 function StepIterated() {
-  const rounds = 20;
   const match = useMemo(() => {
     const row = getStrategy("tit-for-tat");
     const col = getStrategy("always-defect");
-    return playMatch(row, col, PD.matrix, rounds);
+    return playMatch(row, col, PD.matrix, ITERATED_ROUNDS);
   }, []);
 
   return (
