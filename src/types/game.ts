@@ -47,12 +47,14 @@ export interface Round {
 /**
  * A strategy is a pure function from history → next action.
  * `history` contains all rounds so far (row = this player, col = opponent).
+ * Strategies that randomize draw from `rng` (a [0, 1) generator) so callers
+ * can seed play deterministically; it falls back to `Math.random` when omitted.
  */
 export interface Strategy {
   id: string;
   name: string;
   description: string;
-  play: (history: Round[]) => Action;
+  play: (history: Round[], rng?: () => number) => Action;
 }
 
 export interface MatchResult {

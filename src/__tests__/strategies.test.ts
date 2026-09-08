@@ -45,6 +45,20 @@ describe("strategies", () => {
     expect(grim.play([{ row: "C", col: "D" }, { row: "D", col: "C" }])).toBe("D");
   });
 
+  it("randomizing strategies draw from the seeded rng, not Math.random", () => {
+    const random = getStrategy("random");
+    const m1 = playMatch(random, random, CLASSIC_PD, 20, 7);
+    const m2 = playMatch(random, random, CLASSIC_PD, 20, 7);
+    expect(m2.rounds).toEqual(m1.rounds);
+  });
+
+  it("tournaments are reproducible for a given seed and vary across seeds", () => {
+    const a = runTournament(STRATEGIES, CLASSIC_PD, 30);
+    const b = runTournament(STRATEGIES, CLASSIC_PD, 30);
+    expect(b).toEqual(a);
+    expect(runTournament(STRATEGIES, CLASSIC_PD, 30, 2)).not.toEqual(a);
+  });
+
   it("tournament scores sum consistently", () => {
     const result = runTournament(STRATEGIES, CLASSIC_PD, 20);
     expect(Object.keys(result.scores)).toHaveLength(STRATEGIES.length);
