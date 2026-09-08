@@ -38,6 +38,14 @@ describe("AreaDiagram", () => {
     expect(screen.getByText(/50 FP/)).toBeInTheDocument();
   });
 
+  it("keeps the column labels outside the clipped diagram container", () => {
+    // The diagram container is overflow-hidden; a label positioned inside it
+    // above the top edge renders invisible (regression: labels at top: -24).
+    render(<AreaDiagram params={medicalTest} phase="full" />);
+    const label = screen.getByText(/P\(A\) =/);
+    expect(label.closest(".overflow-hidden")).toBeNull();
+  });
+
   it("hides the posterior breakdown in non-full phases", () => {
     render(<AreaDiagram params={medicalTest} phase="evidence" />);
     expect(screen.queryByText(/P\(A\|B\)/)).toBeNull();

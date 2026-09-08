@@ -130,9 +130,7 @@ export default function ExploreBayesPage() {
           <h3 className="text-sm font-semibold text-text-tertiary uppercase tracking-wide mb-3">
             Area Diagram
           </h3>
-          <div className="mt-6">
-            <AreaDiagram params={params} phase="full" />
-          </div>
+          <AreaDiagram params={params} phase="full" />
         </div>
 
         {/* Formula */}
