@@ -33,6 +33,30 @@ export default function AreaDiagram({
 
   return (
     <div className={className}>
+      {/* Column labels sit above the diagram in normal flow — the container
+          below clips (overflow-hidden), so absolutely positioning them at a
+          negative top inside it renders them invisible. */}
+      {phase !== "prior" && (
+        <div className="flex text-xs font-medium mb-1">
+          <motion.div
+            initial={false}
+            animate={{ width: `${leftWidth * 100}%` }}
+            transition={{ duration: 0.5 }}
+            className="text-center"
+            style={{ color: colors.accentRed }}
+          >
+            P(A) = {formatPercent(prevalence)}
+          </motion.div>
+          <motion.div
+            initial={false}
+            animate={{ width: `${rightWidth * 100}%` }}
+            transition={{ duration: 0.5 }}
+            className="text-center text-text-tertiary"
+          >
+            P(¬A) = {formatPercent(1 - prevalence)}
+          </motion.div>
+        </div>
+      )}
       <div
         className="relative border border-separator rounded-lg overflow-hidden"
         style={{ height: containerHeight, width: "100%" }}
@@ -127,30 +151,6 @@ export default function AreaDiagram({
               containerHeight={containerHeight}
               showLabel={phase === "full"}
             />
-
-            {/* Column labels */}
-            <div
-              className="absolute left-0 w-full flex text-xs font-medium"
-              style={{ top: -24 }}
-            >
-              <motion.div
-                initial={false}
-                animate={{ width: `${leftWidth * 100}%` }}
-                transition={{ duration: 0.5 }}
-                className="text-center"
-                style={{ color: colors.accentRed }}
-              >
-                P(A) = {formatPercent(prevalence)}
-              </motion.div>
-              <motion.div
-                initial={false}
-                animate={{ width: `${rightWidth * 100}%` }}
-                transition={{ duration: 0.5 }}
-                className="text-center text-text-tertiary"
-              >
-                P(¬A) = {formatPercent(1 - prevalence)}
-              </motion.div>
-            </div>
 
             {/* Posterior highlight */}
             {phase === "full" && (
